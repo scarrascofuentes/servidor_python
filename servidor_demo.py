@@ -51,7 +51,7 @@ while True:
 
         client_connection.sendall("HTTP/1.1 200 OK\r\n".encode())
         client_connection.sendall("X-RequestEcho: %s\r\n\r\n".encode() % request_echo_json)
-        client_connection.sendall("CONTENIDO!! : ".encode())
+        client_connection.sendall("CONTENIDO!! :\r\n".encode())
     else:
         print("404 archivo invalido")
         client_connection.sendall("HTTP/1.1 404 Not Found".encode())
