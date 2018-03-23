@@ -49,9 +49,15 @@ while True:
 
     if os.path.isfile(filesystem_path):
 
+        # se abren los archivos HTML
+        archivo = open(filesystem_path, "r")
+
         client_connection.sendall("HTTP/1.1 200 OK\r\n".encode())
         client_connection.sendall("X-RequestEcho: %s\r\n\r\n".encode() % request_echo_json)
-        client_connection.sendall("CONTENIDO!! :\r\n".encode())
+        client_connection.sendall("CONTENIDO: \n %s\r\n\r\n".encode() % archivo.read())
+
+        archivo.close()
+
     else:
         print("404 archivo invalido")
         client_connection.sendall("HTTP/1.1 404 Not Found".encode())
