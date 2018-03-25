@@ -1,0 +1,313 @@
+<html>
+
+<head>
+    <title>Navegador Académico</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="author" content="DSIC - PUCV">
+    <meta name="Language" content="es">
+    <meta http-equiv="cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="cache-control" content="max-age=0">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+    <meta http-equiv="pragma" content="no-cache">
+
+    <link rel="stylesheet" href="css/nav-print.css" type="text/css" media="print">
+    <link rel="shortcut icon" type="image/x-icon" href="imagen/favicon.ico">
+
+    <!--[if !IE]>-->
+    <link rel="stylesheet" href="css/nav-screen.css" type="text/css" media="screen">
+    <!--<![endif]-->
+
+    <!--[if gte IE 8]>
+	<link rel="stylesheet" href="css/nav-screen.css" type="text/css" media="screen" />
+<![endif]-->
+
+
+    <!--[if IE 8]>
+	<link rel="stylesheet" href="css/nav-screen.css" type="text/css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/DataTables/demo_table_ie.css" media="screen"/>
+<![endif]-->
+
+
+    <!--[if IE 7]>
+	<link rel="stylesheet" href="css/nav-screen-ie.css" type="text/css" media="screen" />
+	<link rel="stylesheet" type="text/css" href="css/DataTables/demo_table_ie.css" media="screen"/>
+<![endif]-->
+
+
+    <!--[if lte IE 6]>
+	<link rel="stylesheet" href="css/nav-print-ie6.css" type="text/css" media="print" />
+	<link rel="stylesheet" href="css/nav-screen-ie.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/nav-screen-ie6.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="css/DataTables/demo_table_ie.css" type="text/css" media="screen"/>
+	<script type="text/javascript" src="css/supersleight-min.js"></script>
+	
+<![endif]-->
+
+
+
+
+
+
+    <script async="" src="https://www.google-analytics.com/analytics.js"></script>
+    <script type="text/javascript">
+        /************************************************************************/
+        function esNulo(s) {
+            return ((s == null) || (s.length == 0))
+        }
+
+        function isNumber(campo) {
+            if (!esNulo(campo)) {
+                var inputStr = campo.value
+                for (var i = 0; i < inputStr.length; i++) {
+                    var oneChar = inputStr.substring(i, i + 1)
+                    if (oneChar < "0" || oneChar > "9")
+                        return false;
+                }
+                return true;
+            }
+            else {
+                alert("Debe ingresar un Valor para el campo");
+                return false;
+            }
+        }
+
+        function validaRut(numero, dv) {
+            //Esta funcion asume que los valores son distintos de ceros
+            // Que la parte numerica solo contiene numeros
+            // Y el Digito verificador es un numero o la letra K
+            strnum = new String(numero);
+            var resto, suma, digito, factor;
+            suma = 0;
+            factor = 2;
+            for (i = strnum.length - 1; i >= 0; i--) {
+                suma = suma + (parseInt(strnum.charAt(i)) * factor);
+                factor++;
+                if (factor == 8) factor = 2;
+            };
+            resto = (suma % 11);
+
+            digito = 11 - resto;
+            if (digito == 10)
+                if (dv == "K" || dv == "k")
+                    return true
+                else
+                    return false
+            else
+                if (digito == 11)
+                    if (dv == "0")
+                        return true
+                    else
+                        return false
+                else
+                    if (digito == dv)
+                        return true
+                    else
+                        return false;
+            return true;
+        }
+
+        function validardatos() {
+            var enviardatos = true;
+
+            // Verifica que el Numero del RUT no sea nulo
+            strRutNum = new String(document.forms[0].rut_num.value);
+            if (esNulo(strRutNum)) {
+                alert("Debe ingresar un valor para el RUT");
+                document.forms[0].rut_num.focus();
+                return false;
+            }
+            else
+                if (!isNumber(document.forms[0].rut_num)) {
+                    alert("Debe ingresar s\u00f3lo n\u00fameros para el RUT");
+                    document.forms[0].rut_num.focus();
+                    document.forms[0].rut_num.select();
+                    return false;
+                };
+
+            // Verifica que el Digito Verificador del RUT no sea nulo            
+            strRutDv = new String(document.forms[0].rut_dv.value);
+            if (esNulo(strRutDv)) {
+                alert("Debe ingresar un valor para el D\u00edgito Verificador");
+                document.forms[0].rut_dv.focus();
+                return false;
+            }
+            else
+                if (!(isNumber(document.forms[0].rut_dv) || document.forms[0].rut_dv.value == 'k' || document.forms[0].rut_dv.value == 'K')) {
+                    alert("Debe ingresar un valor v\u00e1lido para el D\u00ed gito Verificador");
+                    document.forms[0].rut_dv.focus();
+                    document.forms[0].rut_dv.select();
+                    return false;
+                };
+
+            // Valida que el RUT ingresado sea correcto
+            if (!validaRut(document.forms[0].rut_num.value, document.forms[0].rut_dv.value)) {
+                alert("El RUT ingresado no es v\u00e1lido");
+                document.forms[0].rut_num.focus();
+                document.forms[0].rut_num.select();
+                return false;
+            };
+
+            // Verifica que la clave no sea nula            
+            strUserPas = new String(document.forms[0].user_pas.value);
+            if (esNulo(strUserPas)) {
+                alert("Debe ingresar su contrase\u00f1a");
+                return false;
+            }
+
+            if (document.getElementById('is_texto_imagen') != null) {
+                if (document.getElementById('is_texto_imagen').value == "") {
+                    alert('Debe ingresar el texto de la imagen');
+                    return false;
+                }
+            }
+
+            return enviardatos;
+        }
+
+
+        function valida_longitud() {
+            var num_caracteres_permitidos = 14;
+            var num_caracteres = document.forms[0].user_pas.value.length;
+            if (num_caracteres > num_caracteres_permitidos) {
+                alert('Ha intentado escribir una contrase\u00F1a mayor que el largo permitido, favor verifique este correcta');
+            }
+        }
+
+    </script>
+    <style></style>
+</head>
+
+<body>
+    <div id="home">
+        <div id="cajaLogin">
+            <div class="fachada">&nbsp;</div>
+
+            <h1>
+                <a title="Navegador Académico: Inicio" href="#">
+                    <span>Navegador Académico</span>
+                </a>
+            </h1>
+            <noscript>
+                &lt;table id="login" border="0"&gt; &lt;tr&gt; &lt;td&gt;&lt;div id="cuadroAmarillo"&gt;&lt;p&gt;Estimado Usuario(a):&lt;/p&gt;
+                &lt;p&gt;Este sitio requiere para su funcionamiento el uso de JavaScript y hemos detectado que se encuetra
+                desactivado.&lt;/p&gt; &lt;p&gt;Para continuar por favor vuelva a activarlo.&lt;/p&gt; &lt;p&gt;Si tiene
+                dudas para habilitarlo contacte con soporte al fono 32 - 227 34 00 &amp;oacute; bien al correo &lt;a href="mailto:soporte@ucv.cl&amp;subject=Habilitar%20JavaScript%20en%20mi%20navegador&amp;body=Estimados,%0D%0A%0D%0AEl%20Navegador%20Acad%E9mico%20me%20indica%20que%20debo%20habilitar%20mi%20JavaScript%20y%20desconozco%20como%20realizar%20esta%20tarea.%0D%0A%0D%0AMis%20datos%20de%20contacto%20son%20los%20siguientes:%0D%0A%0D%0ANombre:%20%0D%0AUnidad:%20%0D%0AAnexo:%20%0D%0A%0D%0AEsperando%20una%20pronta%20respuesta%20a%20mi%20inquietud.%0D%0A%0D%0ASaludos%20Cordiales.%0D%0A%0D%0A"&gt;soporte@ucv.cl&lt;/a&gt;.&lt;/p&gt;
+                &lt;/div&gt; &lt;/td&gt; &lt;/tr&gt; &lt;/table&gt;
+            </noscript>
+            <form id="formLogin" onsubmit="return validardatos();" action="index.php" method="post" name="login" style="display: block;">
+                <table border="0" id="login">
+                    <tbody>
+                        <tr>
+                            <td class="labelHome">
+                                RUT
+                            </td>
+                            <td>
+                                <input size="9" maxlength="9" type="text" name="rut_num" id="rut_num" class="inputHome" value="" tabindex="1"> -
+                                <input size="1" maxlength="1" type="text" name="rut_dv" class="inputDigito" value="" tabindex="2">
+                            </td>
+
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="labelHome">
+                                Contraseña
+                            </td>
+                            <td>
+                                <input name="user_pas" id="user_pas" type="password" size="15" maxlength="15" class="inputHome" tabindex="3" onkeypress="valida_longitud()">
+
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td class="labelHome">
+                                <input type="radio" name="rb_aplicacion" value="1" tabindex="4" checked="true">
+                            </td>
+                            <td>
+                                <img src="imagen/logo_navegador.png" width="16" height="23" alt="Gmail"> Navegador Académico
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <img src="imagen/correo/logo_correo.png" width="18" height="12" alt="Gmail Alumno">
+                                <a href="https://nave14.ucv.cl/accesogmail.php" target="_self">mail.pucv.cl</a>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                <input name="enviar" type="submit" class="boton" value="Ingresar" tabindex="5">
+                                <br>
+                                <br>
+                                <a href="perfil/perfil/paso1.php" title="ir a recuperar su contrasea" tabindex="6">¿Olvidó su contraseña?</a>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </form>
+            <div class="center cf">
+            </div>
+            <script type="text/javascript">
+                document.login.style['display'] = "block";
+            </script>
+        </div>
+        <!-- fin div home-->
+
+        <div id="footer">
+            <div class="center">
+                <div class="left">
+                    <a class="pucv" href="http://www.pucv.cl/" title="Ir a PUCV">
+                        <span>Pontificia Universidad Católica de Valparaíso</span>
+                    </a>
+                </div>
+                <!-- fin div left-->
+                <div class="right">
+                    <span class="creditos">
+                        ¿Tiene algún problema? Envíe un email a
+                        <a href="mailto:navegador.academico@pucv.cl?subject=Ayuda: Navegador Académico"
+                            title="Escriba un correo a soporte.dsic@ucv.cl">navegador.academico@pucv.cl</a>
+                        <br> Plataforma desarrollada por la
+                        <a href="http://dsic.ucv.cl/" title="Ir a DSIC">
+                            <strong>Dirección de Servicios de Informática y Comunicaciones DSIC</strong>
+                        </a>
+                        <br> Diseñado por la
+                        <a href="http://www.ead.pucv.cl" title="Sitio de la e[ad] Escuela de Arquitectura y Diseño">e[ad] Escuela de Arquitectura y Diseño</a>
+                    </span>
+
+                </div>
+                <!-- fin div right-->
+            </div>
+            <!-- fin div center-->
+        </div>
+        <!-- fin div footer-->
+        <script>
+            (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-71687954-2', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+
+
+    </div>
+</body>
+
+</html>
