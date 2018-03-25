@@ -26,22 +26,6 @@ while True:
     #diccionario
     headers = {}
     i=1
-    while request_lines[i]:
-
-        lista_headers = request_lines[i]
-        nombre_header, valor_header = lista_headers.split(":", 1)
-
-        headers[nombre_header] = valor_header
-
-        request_echo_header = {}
-        request_echo_header["method"] = items_line_0[0]
-        request_echo_header["headers"] = headers
-        #print(request_echo_header)
-        #print(request_line_0)
-        request_echo_json = json.dumps(request_echo_header)
-        print(request_echo_json)
-        i = i+1
-
     if os.path.isfile(filesystem_path):
 
         # se abren los archivos HTML
@@ -58,5 +42,23 @@ while True:
     else:
         print("404 archivo invalido")
         client_connection.sendall("HTTP/1.1 404 Not Found :'( ".encode())
+
+    while request_lines[i]:
+
+        lista_headers = request_lines[i]
+        nombre_header, valor_header = lista_headers.split(":", 1)
+
+        headers[nombre_header] = valor_header
+
+        request_echo_header = {}
+        request_echo_header["method"] = items_line_0[0]
+        request_echo_header["headers"] = headers
+        #print(request_echo_header)
+        #print(request_line_0)
+        request_echo_json = json.dumps(request_echo_header)
+        print(request_echo_json)
+        i = i+1
+
+
 
     client_connection.close()
