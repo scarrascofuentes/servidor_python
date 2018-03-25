@@ -57,6 +57,6 @@ while True:
 
     else:
         print("404 archivo invalido")
-        client_connection.sendall("HTTP/1.1 404 Not Found :'( ".encode())
+        client_connection.sendall("HTTP/1.1 404 Not Found\r\n".encode())
 
     client_connection.close()
