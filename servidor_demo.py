@@ -26,23 +26,6 @@ while True:
     #diccionario
     headers = {}
     i=1
-    if os.path.isfile(filesystem_path):
-
-        # se abren los archivos HTML
-        archivo = open(filesystem_path, "r")
-
-        client_connection.sendall("HTTP/1.1 200 OK\r\n".encode())
-        client_connection.sendall("X-RequestEcho: %s\r\n\r\n".encode() % request_echo_json)
-        print(client_connection.send("HTTP/1.1 200 OK \r\n\r\n".encode()))
-        print(client_connection.send("X-RequestEcho: %s\r\n\r\n".encode() % request_echo_json))
-        client_connection.sendall("CONTENIDO: \n\r %s\n\r\n\r".encode() % archivo.read())
-
-        archivo.close()
-
-    else:
-        print("404 archivo invalido")
-        client_connection.sendall("HTTP/1.1 404 Not Found :'( ".encode())
-
     while request_lines[i]:
 
         lista_headers = request_lines[i]
@@ -59,6 +42,21 @@ while True:
         print(request_echo_json)
         i = i+1
 
+    if os.path.isfile(filesystem_path):
 
+        # se abren los archivos HTML
+        archivo = open(filesystem_path, "r")
+
+        client_connection.sendall("HTTP/1.1 200 OK\r\n".encode())
+        client_connection.sendall("X-RequestEcho: %s\r\n\r\n".encode() % request_echo_json)
+        print(client_connection.send("HTTP/1.1 200 OK \r\n\r\n".encode()))
+        print(client_connection.send("X-RequestEcho: %s\r\n\r\n".encode() % request_echo_json))
+        client_connection.sendall("CONTENIDO: \n\r %s\n\r\n\r".encode() % archivo.read())
+
+        archivo.close()
+
+    else:
+        print("404 archivo invalido")
+        client_connection.sendall("HTTP/1.1 404 Not Found :'( ".encode())
 
     client_connection.close()
